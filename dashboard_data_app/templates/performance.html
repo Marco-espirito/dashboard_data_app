@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Performance{% endblock %}
+{% block content %}
+<h2>Performance</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="chart_type">Chart Type:</label>
+    <select name="chart_type">
+        <option value="bar">Bar Plot</option>
+        <option value="line">Line Plot</option>
+        <option value="count">Count Plot</option>
+    </select>
+    <label for="start_date">Start Date:</label>
+    <input type="date" name="start_date">
+    <label for="end_date">End Date:</label>
+    <input type="date" name="end_date">
+    <button type="submit">Show Chart</button>
+</form>
+{% if chart %}
+<img alt="im1" src="data:image/png;base64, {{ chart }}">
+{% endif %}
+{% endblock %}
