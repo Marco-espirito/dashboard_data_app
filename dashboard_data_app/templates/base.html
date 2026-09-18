@@ -1,0 +1,41 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Tableau de bord sécurisé pour le suivi des ventes.">
+    <title>{% block title %}SalesBoard{% endblock %}</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">SalesBoard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Ouvrir la navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                {% if user.is_authenticated %}
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Accueil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'performance' %}">Performance</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'summary' %}">Synthèse</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'add_sales' %}">Ajouter</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'upload' %}">Importer</a></li>
+                    <li class="nav-item"><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-sm btn-outline-light ms-lg-2" type="submit">Déconnexion</button></form></li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <main class="container py-4 py-md-5">
+        {% if messages %}{% for message in messages %}<div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button></div>{% endfor %}{% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="container pb-4 text-center text-secondary small">SalesBoard · Django</footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

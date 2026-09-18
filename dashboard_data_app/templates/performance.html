@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Performance · SalesBoard{% endblock %}
+{% block content %}
+<div class="page-heading"><div class="eyebrow">ANALYSE</div><h1>Performance quotidienne</h1><p>Revenus et nombre de transactions agrégés par jour.</p></div>
+<section class="panel mb-4"><form method="get" class="row g-3 align-items-end"><div class="col-md-4">{{ form.start_date.label_tag }}{{ form.start_date }}</div><div class="col-md-4">{{ form.end_date.label_tag }}{{ form.end_date }}</div><div class="col-md-4"><button class="btn btn-primary" type="submit">Appliquer</button> <a class="btn btn-light" href="{% url 'performance' %}">Réinitialiser</a></div>{% if form.non_field_errors %}<div class="col-12 text-danger">{{ form.non_field_errors }}</div>{% endif %}</form></section>
+{% include '_summary_cards.html' %}
+<section class="panel chart-panel"><canvas id="performanceChart" aria-label="Graphique des ventes" role="img"></canvas><div id="chartEmpty" class="empty-state d-none">Aucune donnée sur cette période.</div></section>
+{{ chart_data|json_script:'chart-data' }}
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+<script>
+const data = JSON.parse(document.getElementById('chart-data').textContent);
+if (data.labels.length) {
+  new Chart(document.getElementById('performanceChart'), {type: 'bar', data: {labels: data.labels, datasets: [{label: 'Chiffre d’affaires (€)', data: data.revenue, backgroundColor: '#5b5bd6', borderRadius: 6, yAxisID: 'revenue'}, {label: 'Transactions', data: data.transactions, type: 'line', borderColor: '#20a37a', backgroundColor: '#20a37a', tension: .3, yAxisID: 'transactions'}]}, options: {responsive: true, maintainAspectRatio: false, scales: {revenue: {beginAtZero: true, position: 'left'}, transactions: {beginAtZero: true, position: 'right', grid: {drawOnChartArea: false}, ticks: {precision: 0}}}}});
+} else { document.getElementById('performanceChart').classList.add('d-none'); document.getElementById('chartEmpty').classList.remove('d-none'); }
+</script>
+{% endblock %}

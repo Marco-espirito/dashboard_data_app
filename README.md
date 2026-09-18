@@ -1,0 +1,91 @@
+# SalesBoard
+
+Tableau de bord Django pour saisir, importer et analyser des ventes. Chaque utilisateur consulte ses propres données ; les membres de l’équipe disposant du statut `staff` peuvent consulter l’ensemble des ventes.
+
+## Fonctionnalités
+
+- authentification Django et isolation des données par utilisateur ;
+- saisie manuelle avec calcul automatique du total ;
+- import CSV UTF-8 transactionnel (aucune écriture partielle) ;
+- indicateurs de chiffre d’affaires, transactions, quantités et produits ;
+- graphique journalier filtrable par période ;
+- interface responsive en français ;
+- configuration locale SQLite et production PostgreSQL ;
+- tests automatisés et CI GitHub Actions.
+
+## Installation locale
+
+Prérequis : Python 3.12.
+
+```bash
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# macOS / Linux
+source .venv/bin/activate
+
+python -m pip install -r requirements.txt
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+Ouvrez `http://127.0.0.1:8000/`. SQLite est utilisé localement lorsqu’aucune variable `DATABASE_URL` n’est définie.
+
+## Format CSV
+
+Le fichier doit être encodé en UTF-8 et séparé par des points-virgules :
+
+```csv
+Product;Price;Quantity;Date
+Clavier;49.90;2;2026-09-18 10:30
+Écran;249.00;1;2026-09-18
+```
+
+Les colonnes obligatoires sont `Product`, `Price`, `Quantity` et `Date`. Une éventuelle colonne `Seller` est ignorée : les ventes importées appartiennent toujours au compte connecté.
+
+## Déploiement sur Vercel
+
+Vercel détecte automatiquement Django grâce à `manage.py`. Aucun routeur `vercel.json` personnalisé n’est nécessaire.
+
+1. Poussez le dépôt sur GitHub et importez-le dans Vercel.
+2. Ajoutez une base PostgreSQL persistante depuis le Marketplace Vercel (Neon, Supabase, etc.). N’utilisez pas SQLite en production : le système de fichiers des fonctions serverless n’est pas une base persistante.
+3. Configurez les variables d’environnement suivantes dans Vercel :
+
+   - `DATABASE_URL` : URL de connexion PostgreSQL fournie par le service ;
+   - `DJANGO_SECRET_KEY` : longue valeur aléatoire et secrète ;
+   - `DJANGO_DEBUG=False` ;
+   - `DJANGO_ALLOWED_HOSTS=.vercel.app,votre-domaine.fr` ;
+   - `DJANGO_CSRF_TRUSTED_ORIGINS=https://*.vercel.app,https://votre-domaine.fr`.
+
+4. Appliquez les migrations à la base de production depuis votre machine après avoir récupéré les variables Vercel :
+
+```bash
+vercel link
+vercel env pull .env.production.local
+# Chargez DATABASE_URL depuis ce fichier dans votre terminal, puis :
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+Ne commitez jamais le fichier de variables téléchargé. Redéployez ensuite le projet si nécessaire.
+
+Par sécurité, l’application refuse de démarrer sur Vercel si `DATABASE_URL` est absente.
+
+## Important avant de rendre le dépôt public
+
+Les premiers commits de ce projet contenaient `db.sqlite3` et une ancienne clé Django de développement. Les supprimer du dernier commit ne les efface pas de l’historique Git. Avant de publier **cet historique existant**, créez de préférence un nouveau dépôt à partir de l’état actuel (un seul commit propre), ou nettoyez l’historique avec `git filter-repo`. Changez aussi le mot de passe de tout compte qui existait dans l’ancienne base.
+
+## Vérifications avant publication
+
+```bash
+python manage.py check
+python manage.py check --deploy
+python manage.py makemigrations --check --dry-run
+python manage.py test
+python manage.py collectstatic --noinput
+```
+
+## Variables d’environnement
+
+Consultez [`.env.example`](.env.example). En production, l’application refuse de démarrer avec la clé de développement par défaut lorsque `DJANGO_DEBUG=False`.

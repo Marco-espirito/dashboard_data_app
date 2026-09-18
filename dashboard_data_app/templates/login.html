@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Connexion · SalesBoard{% endblock %}
+{% block content %}
+<div class="auth-shell"><section class="auth-card">
+    <div class="eyebrow">ESPACE SÉCURISÉ</div><h1>Bon retour parmi nous</h1><p class="text-secondary mb-4">Connectez-vous pour consulter et gérer vos ventes.</p>
+    <form method="post" novalidate>{% csrf_token %}
+        {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="mb-3"><label class="form-label" for="{{ form.username.id_for_label }}">Nom d’utilisateur</label><input class="form-control" type="text" name="username" id="{{ form.username.id_for_label }}" autocomplete="username" autofocus required></div>
+        <div class="mb-4"><label class="form-label" for="{{ form.password.id_for_label }}">Mot de passe</label><input class="form-control" type="password" name="password" id="{{ form.password.id_for_label }}" autocomplete="current-password" required></div>
+        <button class="btn btn-primary w-100" type="submit">Se connecter</button>
+    </form>
+</section></div>
+{% endblock %}

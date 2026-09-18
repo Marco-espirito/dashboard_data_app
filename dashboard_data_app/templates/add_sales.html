@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Ajouter une vente · SalesBoard{% endblock %}
+{% block content %}
+<div class="page-heading"><div class="eyebrow">SAISIE</div><h1>Nouvelle vente</h1><p>Enregistrez une transaction manuellement.</p></div>
+<section class="panel form-panel"><form method="post" novalidate>{% csrf_token %}{{ form.as_p }}<div class="d-flex gap-2"><button class="btn btn-primary" type="submit">Enregistrer</button><a class="btn btn-light" href="{% url 'home' %}">Annuler</a></div></form></section>
+{% endblock %}
