@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "python manage.py collectstatic --noinput",
+  "buildCommand": "DATABASE_URL=sqlite:////tmp/vercel-build.sqlite3 python manage.py collectstatic --noinput",
   "outputDirectory": "public",
   "rewrites": [
     {
