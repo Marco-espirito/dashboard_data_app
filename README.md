@@ -102,7 +102,7 @@ Ne commitez jamais le fichier de variables téléchargé. Redéployez ensuite le
 Le fichier [`render.yaml`](render.yaml) décrit un service web Docker gratuit dans la région de Francfort. Render construit le `Dockerfile`, injecte son port dans `PORT`, vérifie `/login/` et redéploie automatiquement les nouveaux commits.
 
 1. Dans Render, créez un nouveau **Blueprint** depuis ce dépôt GitHub.
-2. Lorsque Render le demande, renseignez `DATABASE_URL` avec l’URL PostgreSQL mutualisée de production. Ne placez jamais cette URL directement dans `render.yaml`.
+2. Lorsque Render le demande, renseignez `DATABASE_URL` avec l’URL PostgreSQL mutualisée de production et `DATABASE_URL_UNPOOLED` avec l’URL directe réservée aux migrations. Ne placez jamais ces URL directement dans `render.yaml`.
 3. Render génère automatiquement `DJANGO_SECRET_KEY`, construit l’image et applique les migrations au démarrage.
 
 L’offre gratuite peut mettre le service en veille après une période sans trafic ; la première requête suivante peut donc être plus lente.
