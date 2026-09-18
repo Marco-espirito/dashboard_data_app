@@ -27,6 +27,7 @@ htmlcov/
 .vercel
 .env*
 !.env.example
+!.env.docker.example
 
 # Local agent tooling installed by marketplace integrations
 .agents/

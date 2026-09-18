@@ -32,6 +32,31 @@ python manage.py runserver
 
 Ouvrez `http://127.0.0.1:8000/`. SQLite est utilisé localement lorsqu’aucune variable `DATABASE_URL` n’est définie.
 
+## Docker
+
+Prérequis : Docker Desktop ou Docker Engine avec Compose.
+
+```bash
+docker compose up --build
+```
+
+L’application est disponible sur `http://127.0.0.1:8000/`. Le service `web` attend que PostgreSQL soit prêt, applique automatiquement les migrations puis démarre Gunicorn. Les données PostgreSQL sont conservées dans le volume nommé `salesboard_postgres_data`.
+
+Créez ensuite un administrateur dans un second terminal :
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+Pour personnaliser les identifiants, le port ou les hôtes autorisés :
+
+```bash
+cp .env.docker.example .env.docker
+docker compose --env-file .env.docker up --build
+```
+
+Arrêt simple : `docker compose down`. Pour supprimer également la base locale Docker : `docker compose down --volumes` (cette dernière commande efface les données du volume).
+
 ## Format CSV
 
 Le fichier doit être encodé en UTF-8 et séparé par des points-virgules :
