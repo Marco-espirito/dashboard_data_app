@@ -46,7 +46,7 @@ Les colonnes obligatoires sont `Product`, `Price`, `Quantity` et `Date`. Une év
 
 ## Déploiement sur Vercel
 
-Vercel détecte automatiquement Django grâce à `manage.py`. Aucun routeur `vercel.json` personnalisé n’est nécessaire.
+Le dépôt contient un point d’entrée WSGI explicite dans `api/index.py` et un `vercel.json`. Cette configuration reste compatible avec les projets Vercel anciens qui ne déclenchent pas encore la détection Django automatique.
 
 1. Poussez le dépôt sur GitHub et importez-le dans Vercel.
 2. Ajoutez une base PostgreSQL persistante depuis le Marketplace Vercel (Neon, Supabase, etc.). N’utilisez pas SQLite en production : le système de fichiers des fonctions serverless n’est pas une base persistante.
@@ -70,7 +70,7 @@ python manage.py createsuperuser
 
 Ne commitez jamais le fichier de variables téléchargé. Redéployez ensuite le projet si nécessaire.
 
-Par sécurité, l’application refuse de démarrer sur Vercel si `DATABASE_URL` est absente.
+`DATABASE_URL` doit impérativement pointer vers PostgreSQL en production. Sans elle, SQLite serait éphémère dans une fonction serverless et les tables ne seraient pas persistantes.
 
 ## Important avant de rendre le dépôt public
 

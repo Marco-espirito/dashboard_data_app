@@ -70,8 +70,6 @@ DATABASES = {
         conn_health_checks=True,
     )
 }
-if os.getenv("VERCEL") and not os.getenv("DATABASE_URL"):
-    raise RuntimeError("DATABASE_URL doit pointer vers une base PostgreSQL persistante sur Vercel.")
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
