@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: salesboard-backend
+    runtime: docker
+    plan: free
+    region: frankfurt
+    repo: https://github.com/Marco-espirito/dashboard_data_app
+    branch: master
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /login/
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: .onrender.com
+      - key: DJANGO_CSRF_TRUSTED_ORIGINS
+        value: https://*.onrender.com
+      - key: DJANGO_TIME_ZONE
+        value: Europe/Paris
+      - key: RUN_MIGRATIONS
+        value: "true"
