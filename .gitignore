@@ -25,4 +25,9 @@ htmlcov/
 .pytest_cache/
 
 .vercel
+.env*
 !.env.example
+
+# Local agent tooling installed by marketplace integrations
+.agents/
+skills-lock.json
