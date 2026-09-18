@@ -36,7 +36,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    *([] if os.getenv("VERCEL") else ["whitenoise.middleware.WhiteNoiseMiddleware"]),
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -92,7 +92,7 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": (
             "whitenoise.storage.CompressedStaticFilesStorage"
-            if DEBUG
+            if DEBUG or os.getenv("VERCEL")
             else "whitenoise.storage.CompressedManifestStaticFilesStorage"
         )
     },
